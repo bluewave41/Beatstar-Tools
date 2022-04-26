@@ -1,0 +1,1 @@
+Base application for all projects.
