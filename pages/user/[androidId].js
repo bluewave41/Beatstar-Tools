@@ -8,7 +8,7 @@ const UserPage = (props) => {
         <Box>
             <Grid container>
                 {props.scores.map(el => (
-                    <Grid item xs={8} lg={4}>
+                    <Grid item xs={8} lg={4} key={el.beatmap.idLabel}>
                         <BeatmapCard 
                             label={el.beatmap.idLabel}
                             score={el.score}

@@ -71,7 +71,9 @@ const Leaderboard = (props) => {
         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <h1>Leaderboard</h1>
             {data.map((el, index) => (
-                <Row place={(page - 1) * 20 + index + 1}
+                <Row 
+                    key={el.username}
+                    place={(page - 1) * 20 + index + 1}
                     username={el.username ? el.username : el.androidId}
                     gold={el.gold} platinum={el.platinum}
                     diamond={el.diamond}

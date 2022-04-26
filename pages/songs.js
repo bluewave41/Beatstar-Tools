@@ -31,7 +31,7 @@ const Songs = (props) => {
                 <Table>
                     <TableBody>
                         {songsToRender.map(el => (
-                            <TableRow>
+                            <TableRow key={el.idLabel}>
                                 <TableCell>
                                     {el.idLabel}
                                 </TableCell>

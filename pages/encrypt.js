@@ -212,7 +212,7 @@ const Encrypt = (props) => {
             <Button variant='contained' onClick={onSubmit}>Convert</Button>
 
             <Box sx={{ color: 'red' }}>{message.map(el => (
-                <Box>
+                <Box key={el}>
                     {el}
                 </Box>
             ))}</Box>

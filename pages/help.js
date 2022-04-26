@@ -20,9 +20,9 @@ const Help = (props) => {
             <ol>
                 <li>Open Asset Studio and drag your bundle file inside it. Open the Asset List tab and right click and export the audio file.</li>
                 <li>Rename the exported file so the extension is .bnk instead of .bytes</li>
-                <li>Open wwiseutil-gui and file>open your .bnk file</li>
+                <li>Open wwiseutil-gui and file&gt;open your .bnk file</li>
                 <li>Click Export WEMs and save them somewhere</li>
-                <li>Open your ww2ogg folder and run the following command. "ww2ogg (wem file) --pcb packed_codebooks_aoTuV_603.bin"</li>
+                <li>Open your ww2ogg folder and run the following command. &quot;ww2ogg (wem file) --pcb packed_codebooks_aoTuV_603.bin&quot;</li>
                 <li>This will output a new file with an OGG extension.</li>
             </ol>
             <h3>Converting a chart to Moonscraper</h3>

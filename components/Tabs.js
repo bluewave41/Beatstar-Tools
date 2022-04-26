@@ -21,7 +21,7 @@ const Tabs = (props) => {
     return (
         <List>
             {tabs.map(el => (
-                <Link href={el.link} key={el.text}>
+                <Link href={el.link} key={el.text} passHref>
                     <ListItem button>
                         <ListItemIcon>
                             {el.icon}
