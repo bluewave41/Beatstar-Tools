@@ -143,7 +143,8 @@ const Encrypt = (props) => {
             link.click();
         }
         catch(e) {
-            setMessage([e.response.data]);
+            console.log(Buffer.from(e.response.data).toJSON());
+            setMessage(Buffer.from(e.response.data).toJSON());
         }
     }
 

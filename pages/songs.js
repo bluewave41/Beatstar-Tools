@@ -41,6 +41,9 @@ const Songs = (props) => {
                                 <TableCell>
                                     <a href={el.chartUrl}>Chart</a>
                                 </TableCell>
+                                <TableCell>
+                                    BPM: {el.bpm}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
