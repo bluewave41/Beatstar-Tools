@@ -25,7 +25,7 @@ const Row = (props) => {
                 bgcolor: props.place == 1 ? 'gold' : props.place == 2 ? 'silver' : props.place == 3 ? '#CD7F32' : 'black'
             }}>{props.place}</Avatar>
 
-            <Link href={`/user/${props.username}`}>
+            <Link href={`/user/${props.androidId}`}>
                 <a>
                     <Box sx={{ color: 'white' }}>{props.username}</Box>
                 </a>
@@ -75,6 +75,7 @@ const Leaderboard = (props) => {
                     key={el.username}
                     place={(page - 1) * 20 + index + 1}
                     username={el.username ? el.username : el.androidId}
+                    androidId={el.androidId}
                     gold={el.gold} platinum={el.platinum}
                     diamond={el.diamond}
                     perfect={el.perfect}
