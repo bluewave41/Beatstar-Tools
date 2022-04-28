@@ -7,7 +7,7 @@ module.exports = {
     async getPage(page) {
         const users = await UserModel.query().select()
         .orderBy('totalMedalCount', 'desc')
-        .offset(page * 20)
+        .offset((page - 1) * 20)
         .limit(20)
 
         return users;
