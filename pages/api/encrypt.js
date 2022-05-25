@@ -40,6 +40,11 @@ apiRoute.post(async (req, res) => {
     const info = JSON.parse(req.body.info);
     const data = JSON.parse(req.body.data);
     const chart = new Chart(info.difficulty);
+	
+	const art = (await fsp.readFile(req.files.artwork[0].path)).slice(0, 8);
+	if(Buffer.compare(art, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+		return res.status(500).json([{ error: "Your image is not a PNG."}]);
+	}
     
     try {
         await chart.read(req.files.chart[0].path);

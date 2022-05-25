@@ -2,15 +2,45 @@ import Box from '@mui/material/Box';
 import ScoreRepository from 'repositories/ScoreRepository';
 import BeatmapCard from 'components/BeatmapCard';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+
+const BeatmapRow = (props) => {
+    const colors = {
+        1: '2px solid red',
+        3: '2px solid orange',
+        4: '2px solid white'
+    }
+
+    console.log(colors[props.difficultyId])
+
+    return (
+        <Box sx={{
+            outline: colors[props.difficultyId],
+            minHeight: '64px'
+        }}>
+            {props.label}
+        </Box>
+    )
+}
 
 const UserPage = (props) => {
     return (
         <Box>
+            <Typography variant='h3'>
+                Scores
+            </Typography>
+
+            <Box>
+                {props.scores.map(el => (
+                    <BeatmapRow difficultyId={el.beatmap.difficultyId} label={el.beatmap.beatmapName ? el.beatmap.beatmapName : el.beatmap.idLabel}/>
+                ))}
+            </Box>
+
             <Grid container>
                 {props.scores.map(el => (
-                    <Grid item xs={8} lg={4} key={el.beatmap.idLabel}>
+                    <Grid item xs={8} lg={2} key={el.beatmap.idLabel}>
                         <BeatmapCard 
-                            label={el.beatmap.idLabel}
+                            label={el.beatmap.beatmapName ? el.beatmap.beatmapName : el.beatmap.idLabel}
                             score={el.score}
                             icon={el.medal}
                             difficultyId={el.beatmap.difficultyId}
