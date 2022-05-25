@@ -30,12 +30,6 @@ const UserPage = (props) => {
                 Scores
             </Typography>
 
-            <Box>
-                {props.scores.map(el => (
-                    <BeatmapRow difficultyId={el.beatmap.difficultyId} label={el.beatmap.beatmapName ? el.beatmap.beatmapName : el.beatmap.idLabel}/>
-                ))}
-            </Box>
-
             <Grid container>
                 {props.scores.map(el => (
                     <Grid item xs={8} lg={2} key={el.beatmap.idLabel}>
