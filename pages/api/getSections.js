@@ -29,6 +29,10 @@ apiRoute.post(async (req, res) => {
     const chart = new Chart();
     try {
         await chart.read(req.files.chart[0].path);
+		if(chart.errors) {
+			res.status(500).send(chart.errors[0]);
+			return;
+		}
         res.status(200).send(JSON.stringify(chart.getSections()));
     }
     catch(e) {

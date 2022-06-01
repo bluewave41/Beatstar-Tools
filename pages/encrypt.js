@@ -58,6 +58,7 @@ const Encrypt = (props) => {
                 }
                 catch(e) {
                     setMessage([e.response.data]);
+					return;
                 }
 
                 //add a section at 0 if there isn't any
