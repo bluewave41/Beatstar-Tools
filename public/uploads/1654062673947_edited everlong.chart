@@ -1,0 +1,55 @@
+﻿[Song]
+{
+  Offset = 0
+  Resolution = 192
+  Player2 = bass
+  Difficulty = 0
+  PreviewStart = 0
+  PreviewEnd = 0
+  Genre = "rock"
+  MediaType = "cd"
+  MusicStream = "edited everlong.wav"
+}
+[SyncTrack]
+{
+  0 = TS 4
+  0 = B 158000
+  3552 = B 316000
+  7584 = B 79000
+  11064 = B 158000
+}
+[Events]
+{
+  12624 = E "section Default"
+}
+[ExpertSingle]
+{
+  0 = N 2 0
+  384 = N 0 0
+  1248 = N 0 0
+  1536 = N 2 0
+  1728 = N 1 0
+  1824 = N 0 0
+  2016 = N 1 0
+  2232 = N 2 0
+  3552 = N 2 0
+  3936 = N 0 0
+  4800 = N 0 0
+  5160 = N 2 0
+  5280 = N 1 0
+  5376 = N 0 0
+  5568 = N 1 0
+  5760 = N 2 0
+  7584 = N 2 0
+  7968 = N 0 0
+  8832 = N 0 0
+  9120 = N 2 0
+  9312 = N 1 0
+  9408 = N 0 0
+  9600 = N 1 0
+  9792 = N 2 0
+  11064 = N 2 0
+  11448 = N 0 0
+  12312 = N 0 0
+  12600 = N 2 0
+}
