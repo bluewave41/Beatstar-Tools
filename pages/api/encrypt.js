@@ -91,12 +91,12 @@ apiRoute.post(async (req, res) => {
     await new Promise(function (resolve) {
         fileBuffer.pipe(res);
         fileBuffer.on('end', function () {
-            /*fs.rm(uuid, { recursive: true, force: true }, async function (e) {
+            fs.rm(uuid, { recursive: true, force: true }, async function (e) {
                 await fsp.unlink(req.files.chart[0].path);
                 await fsp.unlink(req.files.audio[0].path);
                 await fsp.unlink(req.files.artwork[0].path);
                 resolve();
-            })*/
+            })
         });
     })
 })
