@@ -28,7 +28,7 @@ apiRoute.use(uploadMiddleware);
 apiRoute.post(async (req, res) => {
     const chart = new Chart();
     try {
-        await chart.read(req.files.chart[0].path);
+        await chart.read(req.files.chart[0].path, req.files.chart[0].path);
 		if(chart.errors.length) {
 			res.status(500).send(chart.errors[0]);
 			return;

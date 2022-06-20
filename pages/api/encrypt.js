@@ -1,5 +1,4 @@
 import Chart from 'lib/Chart';
-import multer from 'multer';
 import nextConnect from 'next-connect';
 import { v4 as uuidv4 } from 'uuid';
 import { promises as fsp } from 'fs';
@@ -7,14 +6,17 @@ import Utilities from 'lib/Utilities';
 import fs from 'fs';
 import archiver from 'archiver';
 import path from 'path';
+import formidable from 'formidable';
 const execFile = require('child_process').execFile;
 
-const upload = multer({
+
+/*const upload = multer({
     storage: multer.diskStorage({
         destination: './public/uploads',
         filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname),
     }),
-});
+	onFileUploadStart: function(file) { console.log(file) }
+});*/
 
 const apiRoute = nextConnect({
     onNoMatch(req, res) {
@@ -26,28 +28,35 @@ const apiRoute = nextConnect({
     }
 });
 
-const uploadMiddleware = upload.fields([
-    { name: 'chart', maxCount: 1 },
-    { name: 'audio', maxCount: 1 },
-    { name: 'artwork', maxCount: 1 },
-    { name: 'info', maxCount: 1 },
-    { name: 'data', maxCount: 1 },
-]);
-
-apiRoute.use(uploadMiddleware);
+const getFiles = (req) => {
+	const form = formidable({ 
+		uploadDir: './public/uploads',
+		multiples: true,
+		filename: function(name) {
+			return Date.now() + '_' + name;
+		}
+	});
+	
+	return new Promise(function(resolve, reject) {
+		form.parse(req, (err, field, files) => {
+			resolve({ ...field, ...files });
+		})
+	})
+}
 
 apiRoute.post(async (req, res) => {
-    const info = JSON.parse(req.body.info);
-    const data = JSON.parse(req.body.data);
+	const files = await getFiles(req);
+    const info = JSON.parse(files.info);
+    const data = JSON.parse(files.data);
     const chart = new Chart(info.difficulty);
 	
-	const art = (await fsp.readFile(req.files.artwork[0].path)).slice(0, 8);
+	const art = (await fsp.readFile(files.artwork.filepath)).slice(0, 8);
 	if(Buffer.compare(art, Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
 		return res.status(500).json([{ error: "Your image is not a PNG."}]);
 	}
     
     try {
-        await chart.read(req.files.chart[0].path);
+        await chart.read(files.chart.filepath, files.chart.originalFilename);
         if (chart.errors.length) {
             return res.status(500).json(JSON.stringify(chart.errors));
         }
@@ -76,7 +85,7 @@ apiRoute.post(async (req, res) => {
 
     //create file system
     try {
-        await createFileSystem(uuid, finalBuffer, req, info);
+        await createFileSystem(uuid, finalBuffer, files, info);
         await createBundles(uuid);
     }
     catch(e) {
@@ -92,16 +101,16 @@ apiRoute.post(async (req, res) => {
         fileBuffer.pipe(res);
         fileBuffer.on('end', function () {
             fs.rm(uuid, { recursive: true, force: true }, async function (e) {
-                await fsp.unlink(req.files.chart[0].path);
-                await fsp.unlink(req.files.audio[0].path);
-                await fsp.unlink(req.files.artwork[0].path);
+                await fsp.unlink(files.chart.filepath);
+                await fsp.unlink(files.audio.filepath);
+                await fsp.unlink(files.artwork.filepath);
                 resolve();
             })
         });
     })
 })
 
-async function createFileSystem(uuid, finalBuffer, req, info) {
+async function createFileSystem(uuid, finalBuffer, files, info) {
     await fsp.mkdir(uuid);
     await fsp.mkdir(uuid + '/chart');
     await fsp.mkdir(uuid + '/artwork');
@@ -110,8 +119,8 @@ async function createFileSystem(uuid, finalBuffer, req, info) {
     await fsp.mkdir(uuid + '/audio/edited');
 
     await fsp.writeFile(uuid + '/chart/508', finalBuffer);
-    await fsp.copyFile(req.files.artwork[0].path, uuid + '/artwork/FooFighter_Everlong.png');
-    await fsp.copyFile(req.files.audio[0].path, uuid + '/audio/bnk/1.wem');
+    await fsp.copyFile(files.artwork.filepath, uuid + '/artwork/FooFighter_Everlong.png');
+    await fsp.copyFile(files.audio.filepath, uuid + '/audio/bnk/1.wem');
     await fsp.writeFile(uuid + '/info.json', JSON.stringify(info));
 }
 
