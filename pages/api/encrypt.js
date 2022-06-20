@@ -1,5 +1,4 @@
 import Chart from 'lib/Chart';
-import nextConnect from 'next-connect';
 import { v4 as uuidv4 } from 'uuid';
 import { promises as fsp } from 'fs';
 import Utilities from 'lib/Utilities';
@@ -9,24 +8,6 @@ import path from 'path';
 import formidable from 'formidable';
 const execFile = require('child_process').execFile;
 
-
-/*const upload = multer({
-    storage: multer.diskStorage({
-        destination: './public/uploads',
-        filename: (req, file, cb) => cb(null, Date.now() + '_' + file.originalname),
-    }),
-	onFileUploadStart: function(file) { console.log(file) }
-});*/
-
-const apiRoute = nextConnect({
-    onNoMatch(req, res) {
-        res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
-    },
-    onError(err, req, res, next) {
-        console.log(err);
-        res.status(500).end(err.message);
-    }
-});
 
 const getFiles = (req) => {
 	const form = formidable({ 
@@ -44,7 +25,7 @@ const getFiles = (req) => {
 	})
 }
 
-apiRoute.post(async (req, res) => {
+export default async function(req, res) {
 	const files = await getFiles(req);
     const info = JSON.parse(files.info);
     const data = JSON.parse(files.data);
@@ -108,7 +89,7 @@ apiRoute.post(async (req, res) => {
             })
         });
     })
-})
+}
 
 async function createFileSystem(uuid, finalBuffer, files, info) {
     await fsp.mkdir(uuid);
@@ -194,8 +175,6 @@ function zipFiles(uuid) {
 		})
 	})
 }
-
-export default apiRoute;
 
 export const config = {
     api: {
