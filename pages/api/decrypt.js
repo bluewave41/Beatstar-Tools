@@ -39,7 +39,7 @@ apiRoute.post(async (req, res) => {
 		try {
 			let file = req.files.chart[x].path;
 			const chart = new Chart();
-			await chart.read(req.files.chart[x].path);
+			await chart.read(req.files.chart[x].path, req.files.chart[x].path);
 			files.push({ data: await chart.getString(), name: req.files.chart[x].originalname.replace('bytes', 'chart') });
 		}
 		catch(e) {
