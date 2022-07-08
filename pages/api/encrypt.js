@@ -8,7 +8,6 @@ import path from 'path';
 import formidable from 'formidable';
 const execFile = require('child_process').execFile;
 
-
 const getFiles = (req) => {
 	const form = formidable({ 
 		uploadDir: './public/uploads',
@@ -47,6 +46,7 @@ export default async function(req, res) {
     }
 
     const resolution = chart.data.songData.Resolution;
+	info.title = info.title.toString(); //just in case the song name is a number
     info.bpm = chart.data.syncData.bpms[0].bpm;
     info.sections = chart.getSections().length;
     info.maxScore = chart.getMaxScore();
