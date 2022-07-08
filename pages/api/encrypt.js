@@ -82,9 +82,15 @@ export default async function(req, res) {
         fileBuffer.pipe(res);
         fileBuffer.on('end', function () {
             fs.rm(uuid, { recursive: true, force: true }, async function (e) {
-                await fsp.unlink(files.chart.filepath);
-                await fsp.unlink(files.audio.filepath);
-                await fsp.unlink(files.artwork.filepath);
+				if(files.chart) {
+					await fsp.unlink(files.chart.filepath);
+				}
+                if(files.audio) {
+					await fsp.unlink(files.audio.filepath);
+				}
+                if(files.artwork) {
+					await fsp.unlink(files.artwork.filepath);
+				}
                 resolve();
             })
         });
