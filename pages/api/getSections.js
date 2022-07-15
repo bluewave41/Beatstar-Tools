@@ -36,7 +36,6 @@ apiRoute.post(async (req, res) => {
         res.status(200).send(JSON.stringify(chart.getSections()));
     }
     catch(e) {
-        console.log(e.stack);
         res.status(500).send(e.message);
     }
 })

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -8,6 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Popup from 'components/Popup';
 
 const Encrypt = (props) => {
     const [info, setInfo] = useState({
@@ -22,6 +23,10 @@ const Encrypt = (props) => {
     const [message, setMessage] = useState([]);
     const [perfectSizes, setPerfectSizes] = useState([]);
     const [speeds, setSpeeds] = useState([]);
+    const [error, setError] = useState(null);
+
+    const artworkRef = useRef();
+    const audioRef = useRef();
 
     const addDataField = (e) => {
 		let value = e.target.value;
@@ -29,6 +34,16 @@ const Encrypt = (props) => {
 			value = parseInt(value);
 		}
 		setInfo(prev => ({ ...prev, [e.target.name]: value }));
+    }
+
+    const isButtonDisabled = () => {
+        if(!chart || !artwork || !audio) {
+            return true;
+        }
+        if(!info.title || !info.artist || !info.id) {
+            return true;
+        }
+        return false;
     }
     
     const onFileSelect = async (e) => {
@@ -57,7 +72,7 @@ const Encrypt = (props) => {
                     response = await axios(config);
                 }
                 catch(e) {
-                    setMessage([e.response.data]);
+                    setError(e.response.data);
 					return;
                 }
 
@@ -77,9 +92,19 @@ const Encrypt = (props) => {
                 setChart(e.target.files[0]);
                 break;
             case 'artwork':
+                if(!e.target.files[0].name.endsWith('.png')) {
+                    artworkRef.current.value = '';
+                    setError("Your image needs to be a PNG that is 512x512 pixels in size.");
+                    return;
+                }
                 setArtwork(e.target.files[0]);
                 break;
             case 'audio':
+                if(!e.target.files[0].name.endsWith('.wem')) {
+                    audioRef.current.value = '';
+                    setError("You need to upload a .WEM file. This needs to be created with Wwise.");
+                    return;
+                }
                 setAudio(e.target.files[0]);
                 break;
         } 
@@ -145,7 +170,7 @@ const Encrypt = (props) => {
         }
         catch(e) {
             let errors = JSON.parse(Buffer.from(e.response.data).toString());
-            setMessage(errors);
+            setError(errors);
         }
     }
 
@@ -184,8 +209,15 @@ const Encrypt = (props) => {
         }
     }
 
+    const handlePopupClose = () => {
+        setError(null);
+    }
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', justifyContent: 'space-between', gap: '10px' }}>
+            {error &&
+                <Popup message={error} handlePopupClose={handlePopupClose} />
+            }
             <h1>Encrypt</h1>
             <TextField label="Title" name="title" onChange={addDataField} />
             <TextField label="Artist" name="artist" onChange={addDataField} />
@@ -207,11 +239,11 @@ const Encrypt = (props) => {
 
             
             <label>Chart:</label><input type="file" onChange={onFileSelect} accept='.chart' name='chart'></input>
-            <label>Artwork:</label><input type="file" onChange={onFileSelect} accept='.png' name='artwork'></input>
-            <label>Audio:</label><input type="file" onChange={onFileSelect} accept='.wem' name='audio'></input>
+            <label>Artwork:</label><input type="file" onChange={onFileSelect} accept='.png' name='artwork' ref={artworkRef} ></input>
+            <label>Audio:</label><input type="file" onChange={onFileSelect} accept='.wem' name='audio' ref={audioRef} ></input>
             <DataPanel perfectSizes={perfectSizes} speeds={speeds} onChange={onBoxChange} onRemove={onRemoveBox} onAddRow={onAddRow} />
 
-            <Button variant='contained' onClick={onSubmit}>Convert</Button>
+            <Button variant='contained' disabled={isButtonDisabled()} onClick={onSubmit}>Convert</Button>
 
             <Box sx={{ color: 'red' }}>{message.map(el => (
                 <Box key={el}>

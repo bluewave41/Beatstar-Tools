@@ -60,6 +60,7 @@ const Leaderboard = (props) => {
         else if(e.target.name == 'forward') {
             try {
                 let response = await axios.post('api/leaderboard/getPage', { page: page+1 });
+                console.log(response.data)
                 setData(response.data);
                 setPage(page + 1);
             }
@@ -72,7 +73,7 @@ const Leaderboard = (props) => {
             <h1>Leaderboard</h1>
             {data.map((el, index) => (
                 <Row 
-                    key={el.username}
+                    key={el.androidId}
                     place={(page - 1) * 20 + index + 1}
                     username={el.username ? el.username : el.androidId}
                     androidId={el.androidId}
